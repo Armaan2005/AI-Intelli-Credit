@@ -8,4 +8,4 @@ google-generativeai
 pydantic
 pytesseract
 pdf2image
-dotenv
+python-dotenv
