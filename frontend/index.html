@@ -1,25 +1,194 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Intelli-Credit AI</title>
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
 <div class="bg"></div>
 
 <div class="container">
-  <h1>🚀 Intelli-Credit AI</h1>
 
-  <div class="card upload-box">
-    <input type="file" id="fileInput" />
-    <button onclick="uploadFile()">Analyze</button>
+  <!-- Header -->
+  <header>
+    <div class="badge">AI-POWERED · INDIA-SPECIFIC</div>
+    <h1>🧠 Intelli-Credit</h1>
+    <p>Corporate Credit Appraisal Engine — Bridging the Intelligence Gap</p>
+  </header>
+
+  <!-- Upload Card -->
+  <div class="card" id="uploadCard">
+    <div class="section-title">Upload Document</div>
+
+    <div class="upload-zone" id="uploadZone">
+      <input type="file" id="fileInput" accept=".pdf,.xlsx,.xls,.csv"
+             onchange="onFileSelected(this)"/>
+      <div class="upload-icon">📄</div>
+      <p>Drop file here or click to browse</p>
+      <p style="font-size:12px;margin-top:6px;color:#4A6080">PDF · Excel · CSV · Max 50MB</p>
+      <div class="file-name" id="fileName"></div>
+    </div>
+
+    <div class="fields">
+      <div class="field">
+        <label>Company Name</label>
+        <input type="text" id="companyName" placeholder="e.g. Reliance Industries Ltd"/>
+      </div>
+      <div class="field">
+        <label>Promoter Name</label>
+        <input type="text" id="promoterName" placeholder="e.g. Mukesh Ambani"/>
+      </div>
+      <div class="field">
+        <label>Loan Amount (₹ Lakhs)</label>
+        <input type="number" id="loanAmount" placeholder="e.g. 500"/>
+      </div>
+      <div class="field">
+        <label>Document Type</label>
+        <select id="docType">
+          <option value="other">Select type...</option>
+          <option value="annual_report">Annual Report</option>
+          <option value="bank_statement">Bank Statement</option>
+          <option value="gst_return">GST Return</option>
+          <option value="itr">ITR</option>
+          <option value="balance_sheet">Balance Sheet</option>
+          <option value="legal_notice">Legal Notice</option>
+          <option value="rating_report">Rating Report</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Factory Capacity % (optional)</label>
+        <input type="number" id="factoryCap" placeholder="e.g. 40" min="0" max="100"/>
+      </div>
+      <div class="field">
+        <label>Site Visit Notes (optional)</label>
+        <input type="text" id="siteNotes" placeholder="Brief observation..."/>
+      </div>
+    </div>
+
+    <button class="btn" id="analyzeBtn" onclick="runAnalysis()">
+      <span>🚀</span> Analyze Document
+    </button>
   </div>
 
-  <div id="loading" class="loading hidden">Analyzing... ⏳</div>
+  <!-- Loading -->
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p style="font-size:15px;font-weight:600;margin-bottom:12px">Analyzing your document...</p>
+    <ul class="loading-steps" id="loadingSteps">
+      <li id="step1">Extracting text from document</li>
+      <li id="step2">Engineering financial features</li>
+      <li id="step3">Running research agent</li>
+      <li id="step4">Scoring Five Cs of credit</li>
+      <li id="step5">Generating AI decision</li>
+      <li id="step6">Building report</li>
+    </ul>
+  </div>
 
-  <div id="result" class="result-card"></div>
-</div>
+  <!-- Results -->
+  <div id="results" class="hidden">
+
+    <!-- Decision Banner -->
+    <div class="decision-banner" id="decisionBanner">
+      <div class="decision-text">
+        <h2 id="decisionHeading"></h2>
+        <p  id="decisionSub"></p>
+      </div>
+      <div class="decision-badge" id="decisionBadge"></div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="label">Credit Score</div>
+        <div class="value" id="statScore" style="color:var(--teal)">—</div>
+        <div class="sub">out of 100</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Rating</div>
+        <div class="value" id="statRating">—</div>
+        <div class="sub">Credit grade</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Loan Amount</div>
+        <div class="value" id="statAmount" style="font-size:18px">—</div>
+        <div class="sub">Recommended</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Interest Rate</div>
+        <div class="value" id="statRate" style="color:var(--gold)">—</div>
+        <div class="sub">MCLR-linked</div>
+      </div>
+    </div>
+
+    <!-- Five Cs -->
+    <div class="card">
+      <div class="section-title">Five Cs Assessment</div>
+      <div class="score-ring-wrap">
+        <div class="score-ring">
+          <svg width="120" height="120" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="52" fill="none"
+                    stroke="rgba(255,255,255,0.06)" stroke-width="10"/>
+            <circle cx="60" cy="60" r="52" fill="none"
+                    stroke="var(--teal)" stroke-width="10"
+                    stroke-linecap="round" id="scoreCircle"
+                    stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+          </svg>
+          <div class="ring-text">
+            <span class="ring-num"  id="ringNum">0</span>
+            <span class="ring-label">/ 100</span>
+          </div>
+        </div>
+      </div>
+      <div class="five-c" id="fiveCBars"></div>
+    </div>
+
+    <!-- Rationale -->
+    <div class="card" id="rationaleCard">
+      <div class="section-title">Decision Rationale</div>
+      <div class="rationale-box" id="rationaleText"></div>
+      <div id="conditionsWrap" class="mt-12 hidden">
+        <p style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--gold)">⚡ Conditions</p>
+        <ul class="conditions" id="conditionsList"></ul>
+      </div>
+    </div>
+
+    <!-- Research -->
+    <div class="card">
+      <div class="section-title">Research Findings</div>
+      <div class="research-grid" id="researchGrid"></div>
+      <div id="researchSummary" class="rationale-box mt-12" style="display:none"></div>
+    </div>
+
+    <!-- Risk Flags -->
+    <div class="card" id="flagsCard">
+      <div class="section-title">Risk Flags</div>
+      <div class="flags" id="flagsList"></div>
+    </div>
+
+    <!-- Actions -->
+    <div class="card">
+      <div class="flex-between">
+        <div>
+          <p style="font-size:14px;font-weight:600">📄 Credit Appraisal Memo (CAM)</p>
+          <p style="font-size:12px;color:var(--text);margin-top:4px">Download full professional PDF report</p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-sm btn-outline" onclick="resetForm()">New Analysis</button>
+          <button class="btn btn-sm" id="downloadBtn" onclick="downloadReport()">⬇ Download CAM PDF</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /results -->
+
+  <!-- Error -->
+  <div id="errorBox" class="error-box hidden"></div>
+
+</div><!-- /container -->
 
 <script src="script.js"></script>
 </body>

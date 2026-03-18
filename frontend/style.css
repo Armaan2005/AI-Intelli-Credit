@@ -1,69 +1,378 @@
+/* ── Reset & Variables ──────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:  #0F1F3D;
+  --navy2: #1A3560;
+  --teal:  #00B4D8;
+  --teal2: #0077A8;
+  --gold:  #F4A261;
+  --green: #22C55E;
+  --red:   #EF4444;
+  --white: #FFFFFF;
+  --gray:  #EEF2F7;
+  --text:  #C8D6E8;
+}
+
+/* ── Base ───────────────────────────────────────────────────── */
 body {
-  margin: 0;
   font-family: 'Poppins', sans-serif;
-  background: #0f172a;
-  color: white;
+  background: #060E1F;
+  color: var(--white);
+  min-height: 100vh;
   overflow-x: hidden;
 }
 
+/* ── Background (upgraded from your radial-gradient) ─────────── */
 .bg {
   position: fixed;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at top, #1e3a8a, #020617);
+  inset: 0;
   z-index: -1;
+  background:
+    radial-gradient(ellipse at 20% 20%, #0d2a5e 0%, #060E1F 60%),
+    radial-gradient(ellipse at 80% 80%, #003d54 0%, transparent 50%);
+}
+.bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(0,180,216,0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
+/* ── Layout ─────────────────────────────────────────────────── */
 .container {
-  text-align: center;
-  padding: 40px;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+header { text-align: center; margin-bottom: 40px; }
+
+.badge {
+  display: inline-block;
+  background: rgba(0,180,216,0.15);
+  border: 1px solid rgba(0,180,216,0.4);
+  color: var(--teal);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 14px;
 }
 
 h1 {
-  font-size: 40px;
-  margin-bottom: 30px;
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 700;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, #fff 40%, var(--teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0;
 }
 
-/* 🔥 Glass Card */
+header p {
+  color: var(--text);
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+/* ── Card (upgraded glass effect) ───────────────────────────── */
 .card {
-  backdrop-filter: blur(15px);
-  background: rgba(255,255,255,0.1);
-  padding: 20px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 20px;
-  display: inline-block;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  backdrop-filter: blur(20px);
+  padding: 28px;
+  margin-bottom: 20px;
 }
 
-.upload-box input {
-  margin-right: 10px;
+/* ── Section Title ───────────────────────────────────────────── */
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
 }
 
-/* 🔥 Button */
-button {
-  background: linear-gradient(45deg, #06b6d4, #3b82f6);
-  border: none;
-  padding: 10px 20px;
+/* ── Upload Zone ─────────────────────────────────────────────── */
+.upload-box {
+  display: block;
+}
+
+.upload-zone {
+  border: 2px dashed rgba(0,180,216,0.35);
+  border-radius: 16px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+.upload-zone:hover,
+.upload-zone.dragover {
+  border-color: var(--teal);
+  background: rgba(0,180,216,0.06);
+}
+.upload-zone input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+}
+.upload-icon { font-size: 40px; margin-bottom: 10px; }
+.upload-zone p { color: var(--text); font-size: 14px; }
+.upload-zone .hint { font-size: 12px; margin-top: 6px; color: #4A6080; }
+.file-name {
+  margin-top: 10px;
+  color: var(--teal);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ── Form Fields ─────────────────────────────────────────────── */
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 20px 0;
+}
+.field label {
+  display: block;
+  font-size: 12px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.field input,
+.field select {
+  width: 100%;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: 10px;
   color: white;
+  font-size: 13px;
+  font-family: 'Poppins', sans-serif;
+  transition: border 0.2s;
+}
+.field input:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--teal);
+}
+.field select option { background: #1A3560; }
+
+/* ── Button (upgraded from your gradient button) ─────────────── */
+button {
+  background: linear-gradient(135deg, var(--teal2), var(--teal));
+  border: none;
+  padding: 14px 20px;
+  border-radius: 12px;
+  color: white;
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.3s;
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,180,216,0.3);
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
-button:hover {
-  transform: scale(1.05);
+.btn-sm {
+  width: auto;
+  padding: 9px 20px;
+  font-size: 13px;
+  border-radius: 9px;
+}
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--teal);
+  color: var(--teal);
+}
+.btn-outline:hover:not(:disabled) {
+  background: rgba(0,180,216,0.1);
+  transform: translateY(-2px);
 }
 
-/* 🔥 Loading */
+/* ── Loading (upgraded from simple text) ─────────────────────── */
 .loading {
-  margin-top: 20px;
-  font-size: 18px;
-}
-
-.hidden {
+  text-align: center;
+  padding: 40px;
   display: none;
 }
+.loading.show { display: block; }
 
-/* 🔥 Result Card */
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(0,180,216,0.2);
+  border-top-color: var(--teal);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  margin: 0 auto 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-steps {
+  list-style: none;
+  text-align: left;
+  display: inline-block;
+  margin-top: 12px;
+}
+.loading-steps li {
+  font-size: 13px;
+  color: var(--text);
+  padding: 4px 0;
+  opacity: 0.4;
+  transition: opacity 0.4s;
+}
+.loading-steps li.active  { opacity: 1; color: var(--teal); }
+.loading-steps li.done    { opacity: 0.7; }
+.loading-steps li.done::before   { content: '✓ '; color: var(--green); }
+.loading-steps li.active::before { content: '⟳ '; }
+.loading-steps li:not(.active):not(.done)::before { content: '○ '; }
+
+/* ── Decision Banner ─────────────────────────────────────────── */
+.decision-banner {
+  padding: 22px 28px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.decision-banner.approve { background: linear-gradient(135deg, rgba(34,197,94,0.15), rgba(34,197,94,0.05)); border: 1px solid rgba(34,197,94,0.3); }
+.decision-banner.reject  { background: linear-gradient(135deg, rgba(239,68,68,0.15), rgba(239,68,68,0.05)); border: 1px solid rgba(239,68,68,0.3); }
+.decision-banner.refer   { background: linear-gradient(135deg, rgba(244,162,97,0.15), rgba(244,162,97,0.05)); border: 1px solid rgba(244,162,97,0.3); }
+
+.decision-text h2 { font-size: 22px; font-weight: 700; }
+.decision-text p  { font-size: 13px; color: var(--text); margin-top: 4px; }
+
+.decision-badge {
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.approve .decision-badge { background: rgba(34,197,94,0.2);  color: var(--green); }
+.reject  .decision-badge { background: rgba(239,68,68,0.2);  color: var(--red);   }
+.refer   .decision-badge { background: rgba(244,162,97,0.2); color: var(--gold);  }
+
+/* ── Stats Grid ──────────────────────────────────────────────── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 18px;
+  text-align: center;
+}
+.stat-card .label { font-size: 11px; color: var(--text); letter-spacing: 1px; text-transform: uppercase; }
+.stat-card .value { font-size: 26px; font-weight: 700; margin: 6px 0; }
+.stat-card .sub   { font-size: 11px; color: var(--text); }
+
+/* ── Score Ring ──────────────────────────────────────────────── */
+.score-ring-wrap { display: flex; justify-content: center; margin: 10px 0 20px; }
+.score-ring { position: relative; width: 120px; height: 120px; }
+.score-ring svg { transform: rotate(-90deg); }
+.score-ring .ring-text {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.score-ring .ring-num   { font-size: 26px; font-weight: 700; }
+.score-ring .ring-label { font-size: 10px; color: var(--text); }
+
+/* ── Five Cs Bars ────────────────────────────────────────────── */
+.five-c { display: flex; flex-direction: column; gap: 10px; }
+.five-c-row { display: flex; align-items: center; gap: 12px; }
+.five-c-row .c-label { width: 100px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+.five-c-row .c-bar-wrap {
+  flex: 1; height: 8px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 4px; overflow: hidden;
+}
+.five-c-row .c-bar { height: 100%; border-radius: 4px; transition: width 1s ease; }
+.five-c-row .c-score { width: 48px; text-align: right; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+
+/* ── Research Grid ───────────────────────────────────────────── */
+.research-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.research-item {
+  padding: 14px; border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.research-item .r-label { font-size: 11px; color: var(--text); text-transform: uppercase; letter-spacing: 1px; }
+.research-item .r-value { font-size: 15px; font-weight: 600; margin-top: 4px; }
+.risk-high   { color: var(--red);   }
+.risk-medium { color: var(--gold);  }
+.risk-low    { color: var(--green); }
+
+/* ── Risk Flags ──────────────────────────────────────────────── */
+.flags { display: flex; flex-direction: column; gap: 8px; }
+.flag-item {
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.flag-item.critical { background: rgba(239,68,68,0.1);  border-left: 3px solid var(--red);  }
+.flag-item.warning  { background: rgba(244,162,97,0.1); border-left: 3px solid var(--gold); }
+.flag-item.info     { background: rgba(0,180,216,0.08); border-left: 3px solid var(--teal); }
+
+/* ── Rationale Box ───────────────────────────────────────────── */
+.rationale-box {
+  padding: 14px; border-radius: 12px;
+  background: rgba(0,180,216,0.06);
+  border: 1px solid rgba(0,180,216,0.15);
+  font-size: 13px; line-height: 1.7; color: var(--text);
+}
+
+/* ── Conditions ──────────────────────────────────────────────── */
+.conditions { list-style: none; }
+.conditions li {
+  padding: 8px 0;
+  font-size: 13px;
+  color: var(--text);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.conditions li::before { content: '⚡ '; color: var(--gold); }
+
+/* ── Result card (your original class — kept for compat) ─────── */
 .result-card {
   margin-top: 30px;
   padding: 25px;
@@ -73,13 +382,32 @@ button:hover {
   box-shadow: 0 10px 40px rgba(0,0,0,0.4);
 }
 
-/* 🔥 Data Grid */
-.result-card p {
-  font-size: 18px;
-  margin: 10px 0;
+/* ── Error Box ───────────────────────────────────────────────── */
+.error-box {
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.3);
+  border-radius: 12px;
+  padding: 16px;
+  color: var(--red);
+  font-size: 14px;
+  margin-top: 16px;
 }
 
-.result-card h2 {
-  font-size: 28px;
-  margin-bottom: 15px;
+/* ── Utility ─────────────────────────────────────────────────── */
+.hidden       { display: none !important; }
+.mt-12        { margin-top: 12px; }
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .fields          { grid-template-columns: 1fr; }
+  .research-grid   { grid-template-columns: 1fr; }
+  .stats           { grid-template-columns: 1fr 1fr; }
+  .decision-banner { flex-direction: column; text-align: center; }
 }
