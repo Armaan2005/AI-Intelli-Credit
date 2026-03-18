@@ -6,3 +6,4 @@ openai
 reportlab
 google-generativeai
 pydantic
+pytesseract
