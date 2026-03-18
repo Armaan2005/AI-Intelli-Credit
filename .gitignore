@@ -1,0 +1,24 @@
+# 🔥 Python
+pycache/
+*.pyc
+*.pyo
+*.pyd
+*.db
+
+# 🔥 Virtual Env
+venv/
+env/
+myenv/
+
+# 🔥 API Keys
+.env
+
+# 🔥 OS files
+.DS_Store
+Thumbs.db
+
+# 🔥 Logs
+*.log
+
+# 🔥 Uploads
+backend/data/sample_pdfs/
